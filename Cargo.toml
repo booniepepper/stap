@@ -1,0 +1,18 @@
+[package]
+name = "rail-scheme"
+version = "0.1.0"
+authors = ["J.R. Hill <hiljusti@so.dang.cool>"]
+description = "A straightforward programming language. Rail is currently experimental and subject to drastic breaking changes."
+license = "GPL-2.0-only"
+
+readme = "README.md"
+homepage = "https://github.com/hiljusti/rail-scheme"
+repository = "https://github.com/hiljusti/rail-scheme"
+
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+pest = "2.5.1"
+rail-lang = "0.24.1"
