@@ -1,0 +1,16 @@
+WHITESPACE = _{ " " | NEWLINE | "\t" }
+COMMENT = _{ "#" ~ (!"\n" ~ ANY)* }
+
+module = { SOI ~ value* ~ EOI }
+
+value = { function | list | quoted_string | identifier }
+
+function = { "(" ~ value* ~ ")" }
+list = { "[" ~ value* ~ "]" }
+
+quoted_string = ${ "\"" ~ string ~ "\"" }
+string = @{ s_char+ }
+s_char = { !("\"" | "\\" ) ~ ANY | "\\\"" }
+
+identifier = @{ i_char+ }
+i_char = { !("(" | ")" | "[" | "]" | " " | "\t") ~ ANY }
