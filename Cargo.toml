@@ -16,3 +16,4 @@ edition = "2021"
 [dependencies]
 pest = "2.5.1"
 rail-lang = "0.24.1"
+regex = "1.7"
