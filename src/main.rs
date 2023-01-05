@@ -8,7 +8,7 @@ fn main() {
         std::process::exit(1);
     }
 
-    let exe_name = &args[0];
+    let _exe_name = &args[0];
     let source_file = &args[1];
 
     let content = match std::fs::read_to_string(source_file) {
