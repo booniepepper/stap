@@ -1,32 +1,14 @@
-An experiment to see if I can run something like Lisp as the frontend of
-the [rail machine](https://github.com/hiljusti/rail).
+# STAP
 
+Stap is an experimental, concatenative Lisp.
 
-Some ideas:
+Uses the [Rail](https://github.com/hiljusti/rail) virtual machine.
 
-```
-These should be identical
+STAP (STAck Processor) is a riff on LISP (LISt Processor) but using some ideas
+from concatenative programming.
 
-1 1 +       # Rail
-(+ 1 1)     # Lisp
+TODO: What is this madness?
 
-1 dup +     # Rail
-(+ (dup 1)) # Lisp
+# Y Tho?
 
-These should be ... translatable
-
-1 [[n]-> n dup] do +            # Rail      (Note: -> is not a builtin... Should it be?)
-(+ (do (fn n -> (dup n)) 1))    # Lisp      (Note: Lambda syntax could be different)
-
-(+ (do (-> [n] (dup n)) 1))     # More literal translation, but wonky... may need an alias for `->` or some other `def` sugar for lambdas?
-
-+
-|
-do____
-|     \
-(->)   1
-|   \
-[n]  dup
-     |
-     n
-```
+A 2023 side quest of [J.R. Hill](https://so.dang.cool).
