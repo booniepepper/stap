@@ -14,8 +14,8 @@ fn silly() {
     let output = stap(&["tests/silly.stap"]);
 
     assert!(output.success);
-    assert_eq!(&output.stdout, "");
-    assert_eq!(&output.stderr, "Usage: stap FILE\n");
+    assert_eq!(&output.stdout, "y so srs\n");
+    assert_eq!(&output.stderr, "");
 }
 
 #[allow(dead_code)]
