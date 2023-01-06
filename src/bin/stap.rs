@@ -1,5 +1,8 @@
-use rail_lang::{corelib::rail_builtin_dictionary, rail_machine::RailState, RunConventions};
-use stap::{run, Module};
+use clap::{Parser, Subcommand};
+use rail_lang::{
+    corelib::rail_builtin_dictionary, rail_machine::RailState, RunConventions,
+};
+use stap::{Module, StapPrompt};
 
 pub const STAP_VERSION: &str = std::env!("CARGO_PKG_VERSION");
 pub const STAP_CONVENTIONS: RunConventions = RunConventions {
@@ -10,30 +13,44 @@ pub const STAP_CONVENTIONS: RunConventions = RunConventions {
 };
 
 fn main() {
-    let args = std::env::args().collect::<Vec<_>>();
+    let args = StapArgs::parse();
 
-    if args.len() != 2 {
-        eprintln!("Usage: stap FILE");
-        std::process::exit(1);
-    }
+    let state = RailState::new_main(rail_builtin_dictionary(), &STAP_CONVENTIONS);
 
-    let _exe_name = &args[0];
-    let source_file = &args[1];
-
-    let content = match std::fs::read_to_string(source_file) {
-        Ok(content) => content,
-        Err(e) => {
-            eprintln!("Unable to read {}. {:?}", source_file, e);
-            std::process::exit(1);
+    match args.mode {
+        Some(Mode::Interactive) | None => {
+            StapPrompt::new(STAP_CONVENTIONS).run(state)
+        },
+        Some(Mode::Run { file }) => {
+            let content = match std::fs::read_to_string(&file) {
+                Ok(content) => content,
+                Err(e) => {
+                    eprintln!("Unable to read {}. {:?}", file, e);
+                    std::process::exit(1);
+                }
+            };
+            let module = Module::parse(&content);
+            stap::run(state, module);
         }
-    };
+    }
+    std::process::exit(0)
+}
 
-    let module = Module::parse(&content);
+#[derive(Parser)]
+#[command(name = "stap", version = STAP_VERSION)]
+/// stap is an experimental concatenative Lisp based on Rail
+struct StapArgs {
+    #[command(subcommand)]
+    mode: Option<Mode>,
+}
 
-    let exit_code = run(
-        RailState::new_main(rail_builtin_dictionary(), &STAP_CONVENTIONS),
-        module,
-    );
+#[derive(Subcommand)]
+enum Mode {
+    #[command(visible_alias = "i")]
+    /// Start and interactive session. (Default when no subcommand specified)
+    Interactive,
 
-    std::process::exit(exit_code);
+    #[command(visible_alias = "f")]
+    /// Run a file.
+    Run { file: String },
 }

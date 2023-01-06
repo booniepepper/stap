@@ -11,6 +11,8 @@ repository = "https://github.com/hiljusti/stap"
 edition = "2021"
 
 [dependencies]
+clap = { version = "4.0", features = [ "derive" ] }
 pest = "2.5"
 pest_derive = "2.5"
 rail-lang = "0.24.1"
+rustyline = "10.0"

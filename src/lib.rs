@@ -1,17 +1,18 @@
 mod parser;
 pub use parser::*;
+mod prompt;
+pub use prompt::*;
+
 use rail_lang::{rail_machine::RailState, tokens::Token};
 
-pub fn run(state: RailState, module: Module) -> i32 {
+pub fn run(state: RailState, module: Module) -> RailState {
     let rail_tokens = module
         .values
         .into_iter()
         .flat_map(to_rail_tokens)
         .collect::<Vec<_>>();
 
-    let _end_state = state.run_tokens(rail_tokens);
-
-    0
+    state.run_tokens(rail_tokens)
 }
 
 fn to_rail_tokens(value: Value) -> Vec<Token> {

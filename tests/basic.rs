@@ -1,22 +1,26 @@
 const STAP_PATH: &str = std::env!("CARGO_BIN_EXE_stap");
 
 #[test]
-fn no_args_fails() {
-    let output = stap(&[]);
-
-    assert!(!output.success);
-    assert_eq!(&output.stdout, "");
-    assert_eq!(&output.stderr, "Usage: stap FILE\n");
-}
-
-#[test]
-fn silly() {
-    let output = stap(&["tests/silly.stap"]);
+fn run_silly() {
+    let output = stap(&["run", "tests/silly.stap"]);
 
     assert!(output.success);
     assert_eq!(&output.stdout, "y so srs\n");
     assert_eq!(&output.stderr, "");
 }
+
+#[test]
+fn run_missing_file_fails() {
+    let output = stap(&["run"]);
+
+    assert!(!output.success);
+    assert_eq!(&output.stdout, "");
+    assert!(output
+        .stderr
+        .contains("required arguments were not provided"));
+}
+
+/* ---------------- */
 
 #[allow(dead_code)]
 fn stap(args: &[&str]) -> Output {
