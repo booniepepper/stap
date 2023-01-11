@@ -14,5 +14,5 @@ edition = "2021"
 clap = { version = "4.0", features = [ "derive" ] }
 pest = "2.5"
 pest_derive = "2.5"
-rail-lang = "0.24.1"
+rail-lang = "0.24.2"
 rustyline = "10.0"

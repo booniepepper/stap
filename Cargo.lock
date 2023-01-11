@@ -637,9 +637,9 @@ dependencies = [
 
 [[package]]
 name = "rail-lang"
-version = "0.24.1"
+version = "0.24.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "77dcdd2e6ad0ab4af5194fc83d5a901b0a5f4f83bf2f87c1c49fbb49ff847605"
+checksum = "be3f1df8e08736f393c14049a51166c7c17a21fe4e6547e0cc8404327c743a75"
 dependencies = [
  "clap 3.2.23",
  "clearscreen",

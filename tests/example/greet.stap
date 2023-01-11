@@ -1,0 +1,5 @@
+(def! greet [
+    (pl (join "" ["Hello, " "world" "!"]))
+])
+
+(greet)

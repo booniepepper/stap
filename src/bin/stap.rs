@@ -1,8 +1,10 @@
 use clap::{Parser, Subcommand};
 use rail_lang::{
-    corelib::rail_builtin_dictionary, rail_machine::RailState, RunConventions,
+    corelib::rail_builtin_dictionary,
+    rail_machine::{self, RailState},
+    RunConventions,
 };
-use stap::{Module, StapPrompt};
+use stap::{LogLevel, Module, StapPrompt};
 
 pub const STAP_VERSION: &str = std::env!("CARGO_PKG_VERSION");
 pub const STAP_CONVENTIONS: RunConventions = RunConventions {
@@ -16,11 +18,10 @@ fn main() {
     let args = StapArgs::parse();
 
     let state = RailState::new_main(rail_builtin_dictionary(), &STAP_CONVENTIONS);
+    let log_level = args.log.unwrap_or(LogLevel::WhateverRailDoes);
 
-    match args.mode {
-        Some(Mode::Interactive) | None => {
-            StapPrompt::new(STAP_CONVENTIONS).run(state)
-        },
+    let end_state = match args.mode {
+        Some(Mode::Interactive) | None => StapPrompt::new(STAP_CONVENTIONS, log_level).run(state),
         Some(Mode::Run { file }) => {
             let content = match std::fs::read_to_string(&file) {
                 Ok(content) => content,
@@ -30,9 +31,14 @@ fn main() {
                 }
             };
             let module = Module::parse(&content);
-            stap::run(state, module);
+            stap::run(state, module, log_level)
         }
+    };
+
+    if !end_state.stack.is_empty() {
+        rail_machine::log_warn(&STAP_CONVENTIONS, end_state.stack);
     }
+
     std::process::exit(0)
 }
 
@@ -42,6 +48,9 @@ fn main() {
 struct StapArgs {
     #[command(subcommand)]
     mode: Option<Mode>,
+
+    #[arg(long)]
+    log: Option<LogLevel>,
 }
 
 #[derive(Subcommand)]

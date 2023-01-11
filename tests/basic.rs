@@ -1,11 +1,29 @@
 const STAP_PATH: &str = std::env!("CARGO_BIN_EXE_stap");
 
 #[test]
+fn run_greet() {
+    let output = stap(&["run", &example("greet")]);
+
+    assert!(output.success);
+    assert_eq!(&output.stdout, "Hello, world!\n");
+    assert_eq!(&output.stderr, "");
+}
+
+#[test]
 fn run_silly() {
-    let output = stap(&["run", "tests/silly.stap"]);
+    let output = stap(&["run", &example("silly")]);
 
     assert!(output.success);
     assert_eq!(&output.stdout, "y so srs\n");
+    assert_eq!(&output.stderr, "");
+}
+
+#[test]
+fn run_one_plus_one() {
+    let output = stap(&["run", &example("one-plus-one")]);
+
+    assert!(output.success);
+    assert_eq!(&output.stdout, "2\n");
     assert_eq!(&output.stderr, "");
 }
 
@@ -21,6 +39,10 @@ fn run_missing_file_fails() {
 }
 
 /* ---------------- */
+
+fn example(name: &str) -> String {
+    format!("tests/example/{}.stap", name)
+}
 
 #[allow(dead_code)]
 fn stap(args: &[&str]) -> Output {

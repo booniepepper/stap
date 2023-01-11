@@ -9,7 +9,7 @@ pub use pest::Parser;
 #[grammar = "stap.pest"]
 pub struct StapParser;
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Module {
     pub values: Vec<Value>,
 }
@@ -49,7 +49,7 @@ impl Display for Module {
     }
 }
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Value {
     Function(Vec<Value>),
     List(Vec<Value>),
