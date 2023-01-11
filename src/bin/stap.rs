@@ -4,7 +4,7 @@ use rail_lang::{
     rail_machine::{self, RailState},
     RunConventions,
 };
-use stap::{LogLevel, Module, StapPrompt};
+use stap_lang::{LogLevel, Module, StapPrompt};
 
 pub const STAP_VERSION: &str = std::env!("CARGO_PKG_VERSION");
 pub const STAP_CONVENTIONS: RunConventions = RunConventions {
@@ -31,7 +31,7 @@ fn main() {
                 }
             };
             let module = Module::parse(&content);
-            stap::run(state, module, log_level)
+            stap_lang::run(state, module, log_level)
         }
     };
 
