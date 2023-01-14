@@ -24,26 +24,29 @@ impl StapPrompt {
 
     pub fn run(&mut self, state: RailState) -> RailState {
         let mut state = state;
+
+        let mut input = String::new();
+
         loop {
-            let input = self.editor.readline("> ");
+            input = match self.editor.readline("> ") {
+                Err(e) => {
+                    // ^D and ^C are not error cases.
+                    if let ReadlineError::Eof = e {
+                        rail_machine::log_fatal(&self.conventions, "End of input");
+                        return state;
+                    } else if let ReadlineError::Interrupted = e {
+                        rail_machine::log_fatal(&self.conventions, "Process interrupt");
+                        return state;
+                    }
 
-            if let Err(e) = input {
-                // ^D and ^C are not error cases.
-                if let ReadlineError::Eof = e {
-                    rail_machine::log_fatal(&self.conventions, "End of input");
-                    return state;
-                } else if let ReadlineError::Interrupted = e {
-                    rail_machine::log_fatal(&self.conventions, "Process interrupt");
-                    return state;
+                    eprintln!("Something bad happened. {:?}", e);
+                    std::process::exit(1);
                 }
+                Ok(line) => input + &line,
+            };
 
-                eprintln!("Something bad happened. {:?}", e);
-                std::process::exit(1);
-            }
-
-            let input = input.unwrap();
-
-            let module = Module::parse(&input);
+            let (module, remaining) = Module::parse_line(&input);
+            input = remaining;
 
             state = run(state, module, self.log_level);
         }

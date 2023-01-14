@@ -38,6 +38,29 @@ impl Module {
 
         Module { values }
     }
+
+    pub fn parse_line(line: &str) -> (Module, String) {
+        let (balanced, remaining, _) = line.chars().fold(
+            (String::new(), String::new(), 0),
+            |(balanced, mut acc, parens), c| {
+                acc.push(c);
+                match (c, parens) {
+                    ('(', _) => (balanced, acc, parens + 1),
+                    (')', 1) => (balanced + &acc, String::new(), 0),
+                    (')', _) => (balanced, acc, parens - 1),
+                    (_, _) => (balanced, acc, parens),
+                }
+            },
+        );
+
+        (Module::parse(&balanced), remaining)
+    }
+
+    pub fn join(self, other: Module) -> Module {
+        Module {
+            values: [self.values, other.values].concat(),
+        }
+    }
 }
 
 impl Display for Module {
