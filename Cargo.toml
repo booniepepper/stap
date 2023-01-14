@@ -1,6 +1,6 @@
 [package]
 name = "stap-lang"
-version = "0.2.0"
+version = "0.2.1"
 authors = ["J.R. Hill <hiljusti@so.dang.cool>"]
 description = "Stap programming language (STAck Processor, ala Lisp)"
 license = "GPL-2.0-only"
